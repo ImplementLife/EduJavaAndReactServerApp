@@ -51,16 +51,15 @@ public class JwtAuthService {
 
         SecDto secDto = new SecDto();
         secDto.setAccessToken(token);
+//        secDto.setRefreshToken(impl for here);
         return secDto;
     }
 
     public Authentication validateToken(String token) {
         DecodedJWT decoded = verifier.verify(token);
-        User user = new User();
-        user.setId(valueOf(decoded.getSubject()));
+        Long userId = valueOf(decoded.getSubject());
         Set<Role> roles = roleStringConverter.convertToEntityAttribute(decoded.getClaim("roles").asString());
-        user.setRoles(roles);
 
-        return new UsernamePasswordAuthenticationToken(user, null, roles);
+        return new UsernamePasswordAuthenticationToken(userId, null, roles);
     }
 }

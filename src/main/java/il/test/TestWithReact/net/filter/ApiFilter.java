@@ -18,7 +18,6 @@ public class ApiFilter implements Filter {
         ServletResponse response,
         FilterChain chain
     ) throws IOException, ServletException {
-
         HttpServletRequest req = (HttpServletRequest) request;
         String requestURI = req.getRequestURI();
 

@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,17 @@ import java.util.Optional;
 public class ApiCommonController implements ApiCommon {
     @Autowired
     private UserRepo userRepo;
+
+    public Long getAuthUserID() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (Long) authentication.getPrincipal();
+    }
+
+    @GetMapping("/self")
+    public ResponseEntity<User> selfInfo() {
+        Optional<User> byId = userRepo.findById(getAuthUserID());
+        return ResponseEntity.ok(byId.orElseThrow(() -> new IllegalStateException("Not Found")));
+    }
 
     @GetMapping("/user")
     @JsonView({ViewLevel.Protected.class})

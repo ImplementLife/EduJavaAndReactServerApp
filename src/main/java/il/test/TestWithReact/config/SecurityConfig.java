@@ -1,6 +1,8 @@
 package il.test.TestWithReact.config;
 
+import il.test.TestWithReact.net.except.AuthEntryPoint;
 import il.test.TestWithReact.net.filter.JwtFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,13 +15,17 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    @Autowired
+    private AuthEntryPoint authEntryPoint;
+    @Autowired
+    private JwtFilter jwtFilter;
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity https, JwtFilter jwtFilter) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity https) throws Exception {
         https
-            .csrf().disable()
-            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtFilter, BasicAuthenticationFilter.class)
-            .headers(h -> h.frameOptions().disable())
+            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .csrf().disable()
+//            .headers(h -> h.frameOptions().disable())
 
             .authorizeRequests(a -> a
                 .antMatchers("/api/auth/**").permitAll()

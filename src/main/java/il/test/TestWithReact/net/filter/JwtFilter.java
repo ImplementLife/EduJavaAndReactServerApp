@@ -1,8 +1,11 @@
 package il.test.TestWithReact.net.filter;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import il.test.TestWithReact.net.except.AuthEntryPoint;
 import il.test.TestWithReact.service.JwtAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -17,6 +20,8 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private JwtAuthService jwtAuthService;
+    @Autowired
+    private AuthEntryPoint entryPoint;
 
     @Override
     protected void doFilterInternal(
@@ -29,7 +34,11 @@ public class JwtFilter extends OncePerRequestFilter {
         if (header != null) {
             try {
                 SecurityContextHolder.getContext().setAuthentication(jwtAuthService.validateToken(header));
-            } catch (RuntimeException e) {
+            } catch (JWTVerificationException e) {
+                SecurityContextHolder.clearContext();
+                entryPoint.commence(request, response, e);
+                return;
+            } catch (Exception e) {
                 SecurityContextHolder.clearContext();
                 throw e;
             }
@@ -37,6 +46,4 @@ public class JwtFilter extends OncePerRequestFilter {
 
         chain.doFilter(request, response);
     }
-
 }
-
