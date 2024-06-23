@@ -22,15 +22,15 @@ public class LogFilter implements Filter {
         FilterChain chain
     ) throws IOException, ServletException {
         chain.doFilter(request, response);
-        HttpServletResponse res = (HttpServletResponse) response;
-        if (res.getStatus() == HttpServletResponse.SC_NOT_FOUND) {
-            HttpServletRequest req = (HttpServletRequest) request;
-            StringBuffer requestURL = req.getRequestURL();
-            String remoteAddr = req.getRemoteAddr();
-            Map<String, String[]> parameterMap = req.getParameterMap();
-            Map<String, String[]> headersMap = getHeadersMap(req);
-            String remoteUser = req.getRemoteUser();
 
+        HttpServletResponse res = (HttpServletResponse) response;
+        HttpServletRequest req = (HttpServletRequest) request;
+        StringBuffer requestURL = req.getRequestURL();
+        String remoteAddr = req.getRemoteAddr();
+        Map<String, String[]> parameterMap = req.getParameterMap();
+        Map<String, String[]> headersMap = getHeadersMap(req);
+        String remoteUser = req.getRemoteUser();
+        if (res.getStatus() == HttpServletResponse.SC_NOT_FOUND) {
             log.info("unknown path: {} : {} : {}", requestURL, remoteAddr, remoteUser);
         }
     }

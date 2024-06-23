@@ -5,7 +5,6 @@ import il.test.TestWithReact.net.except.AuthEntryPoint;
 import il.test.TestWithReact.service.JwtAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -33,7 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (header != null) {
             try {
-                SecurityContextHolder.getContext().setAuthentication(jwtAuthService.validateToken(header));
+                SecurityContextHolder.getContext().setAuthentication(jwtAuthService.validateAccessToken(header));
             } catch (JWTVerificationException e) {
                 SecurityContextHolder.clearContext();
                 entryPoint.commence(request, response, e);

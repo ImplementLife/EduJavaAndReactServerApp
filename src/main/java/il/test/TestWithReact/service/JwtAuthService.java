@@ -1,6 +1,7 @@
 package il.test.TestWithReact.service;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -15,48 +16,86 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.Base64;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 import static java.lang.Long.valueOf;
 
 @Service
 public class JwtAuthService {
-    @Value("${security.jwt.token.secret-key:secret-key}")
-    private String secretKey;
     @Autowired
     private RoleStringConverter roleStringConverter;
 
-    private Algorithm algorithm;
-    private JWTVerifier verifier;
+    private String accessSecretKey;
+    private String refreshSecretKey;
+
+    private Algorithm accessAlgorithm;
+    private JWTVerifier accessVerifier;
+
+    private Algorithm refreshAlgorithm;
+    private JWTVerifier refreshVerifier;
+
+    // K: (user id), V: (list with not expired tokens)
+    private final Map<Long, List<SecDto>> tokensBlacklist = new HashMap<>();
 
     @PostConstruct
     protected void init() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-        algorithm = Algorithm.HMAC256(secretKey);
-        verifier = JWT.require(algorithm).build();
+        accessSecretKey = UUID.randomUUID().toString();
+        refreshSecretKey = UUID.randomUUID().toString();
+
+
+        accessSecretKey = Base64.getEncoder().encodeToString(accessSecretKey.getBytes());
+        refreshSecretKey = Base64.getEncoder().encodeToString(refreshSecretKey.getBytes());
+
+        accessAlgorithm = Algorithm.HMAC256(accessSecretKey);
+        accessVerifier = JWT.require(accessAlgorithm).build();
+
+        refreshAlgorithm = Algorithm.HMAC256(refreshSecretKey);
+        refreshVerifier = JWT.require(refreshAlgorithm).build();
     }
 
     public SecDto createToken(User user) {
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + 3600000); // 1 hour
-
-        String token = JWT.create()
-            .withSubject(user.getId().toString())
-            .withIssuedAt(now)
-            .withExpiresAt(validity)
-            .withClaim("roles", roleStringConverter.convertToDatabaseColumn(user.getRoles()))
-            .sign(algorithm);
-
         SecDto secDto = new SecDto();
-        secDto.setAccessToken(token);
-//        secDto.setRefreshToken(impl for here);
+        secDto.setAccessToken(createAccessToken(user));
+        secDto.setRefreshToken(createRefreshToken(user));
         return secDto;
     }
 
-    public Authentication validateToken(String token) {
-        DecodedJWT decoded = verifier.verify(token);
+    public SecDto refresh(SecDto secDto) {
+
+        throw new UnsupportedOperationException();
+    }
+
+    public void logout(SecDto secDto) {
+
+        throw new UnsupportedOperationException();
+    }
+
+    private String createAccessToken(User user) {
+        JWTCreator.Builder builder = createToken(user, 3_600_000L);// 1 hour
+        String token = builder
+            .withClaim("roles", roleStringConverter.convertToDatabaseColumn(user.getRoles()))
+            .sign(accessAlgorithm);
+        return token;
+    }
+
+    private String createRefreshToken(User user) {
+        JWTCreator.Builder builder = createToken(user, 2_592_000_000L);// 30 days
+        return builder.sign(refreshAlgorithm);
+    }
+
+    private JWTCreator.Builder createToken(User user, long lifetime) {
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + lifetime);
+
+        JWTCreator.Builder builder = JWT.create()
+            .withIssuedAt(now)
+            .withExpiresAt(validity)
+            .withSubject(user.getId().toString());
+        return builder;
+    }
+
+    public Authentication validateAccessToken(String token) {
+        DecodedJWT decoded = accessVerifier.verify(token);
         Long userId = valueOf(decoded.getSubject());
         Set<Role> roles = roleStringConverter.convertToEntityAttribute(decoded.getClaim("roles").asString());
 

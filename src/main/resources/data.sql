@@ -1,6 +1,7 @@
-INSERT INTO users (email, first_name, last_name, birth_date, address, phone_number, pass) VALUES
-('root@root.com', 'ROOT_USER', 'ROOT_USER', '2000-06-16 00:00:00', null, '0000000000', 'root'),
-('root2@root.com', 'ROOT_USER_2', 'ROOT_USER_2', '2000-06-16 00:00:00', null, '0000000001', 'root');
+INSERT INTO users (email, first_name, last_name, birth_date, address, phone_number, pass, roles) VALUES
+('root@root.com', 'ROOT_USER', 'ROOT_USER', '2000-06-16 00:00:00', null, '0000000000', 'root', 'AM'),
+('1', 'ROOT_USER', 'ROOT_USER', '2000-06-16 00:00:00', null, '0000000000', '1', 'AM'),
+('root2@root.com', 'ROOT_USER_2', 'ROOT_USER_2', '2000-06-16 00:00:00', null, '0000000001', 'root', 'A');
 
 INSERT INTO users (email, first_name, last_name, birth_date, address, phone_number) VALUES
 ('email1@example.com', 'John', 'Doe', '1990-01-01 00:00:00', '123 Main St', '1234567890'),

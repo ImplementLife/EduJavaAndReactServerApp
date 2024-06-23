@@ -7,11 +7,6 @@ import il.test.TestWithReact.service.JwtAuthService;
 import il.test.TestWithReact.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,12 +29,14 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<Void> refresh(SecDto secDto) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<SecDto> refresh(SecDto secDto) {
+        SecDto refreshedSecDto = jwtAuthService.refresh(secDto);
+        return ResponseEntity.ok(refreshedSecDto);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(SecDto secDto) {
+        jwtAuthService.logout(secDto);
         return ResponseEntity.ok().build();
     }
 }

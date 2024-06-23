@@ -24,11 +24,13 @@ public class SecurityConfig {
         https
             .addFilterBefore(jwtFilter, BasicAuthenticationFilter.class)
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .csrf().disable()
-//            .headers(h -> h.frameOptions().disable())
+            .csrf().and()
+            .cors().and()
 
             .authorizeRequests(a -> a
                 .antMatchers("/api/auth/**").permitAll()
+
+                .antMatchers("/api/users").hasRole("ADMIN")
                 .antMatchers("/api/**").authenticated()
             )
         ;
