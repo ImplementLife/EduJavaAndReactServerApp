@@ -1,5 +1,6 @@
+INSERT INTO users (email, first_name, last_name, birth_date, address, phone_number, pass, roles, profile_Image_Url) VALUES
+('root@root.com', 'ROOT_USER', 'ROOT_USER', '2000-06-16 00:00:00', null, '0000000000', 'root', 'AM', 'IMG_20240409_225012_010_13094431151800.jpg');
 INSERT INTO users (email, first_name, last_name, birth_date, address, phone_number, pass, roles) VALUES
-('root@root.com', 'ROOT_USER', 'ROOT_USER', '2000-06-16 00:00:00', null, '0000000000', 'root', 'AM'),
 ('1', 'ROOT_USER', 'ROOT_USER', '2000-06-16 00:00:00', null, '0000000000', '1', 'AM'),
 ('root2@root.com', 'ROOT_USER_2', 'ROOT_USER_2', '2000-06-16 00:00:00', null, '0000000001', 'root', 'A');
 

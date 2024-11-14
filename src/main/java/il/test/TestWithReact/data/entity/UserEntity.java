@@ -14,6 +14,7 @@ public interface UserEntity extends UserDto, UserValidate, UserSchema {
     Date   getBirthDate();
     String getAddress();
     String getPhoneNumber();
+    String getProfileImageUrl();
 
     void setId(Long id);
     void setEmail(String email);
@@ -22,4 +23,5 @@ public interface UserEntity extends UserDto, UserValidate, UserSchema {
     void setBirthDate(Date birthDate);
     void setAddress(String address);
     void setPhoneNumber(String phoneNumber);
+    void setProfileImageUrl(String profileImageUrl);
 }

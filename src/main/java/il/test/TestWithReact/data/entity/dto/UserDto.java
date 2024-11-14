@@ -19,4 +19,6 @@ public interface UserDto {
     String getAddress();
     @JsonView(ViewLevel.Protected.class)
     String getPhoneNumber();
+    @JsonView(ViewLevel.Public.class)
+    String getProfileImageUrl();
 }

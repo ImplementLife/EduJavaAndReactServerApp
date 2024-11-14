@@ -14,6 +14,7 @@ import java.util.Set;
 public class RoleStringConverter implements AttributeConverter<Set<Role>, String> {
     @Override
     public String convertToDatabaseColumn(Set<Role> rolesAsSet) {
+        if (rolesAsSet == null) return "";
         StringBuilder builder = new StringBuilder();
         for (Role role : rolesAsSet) {
             builder.append(role.getId());
