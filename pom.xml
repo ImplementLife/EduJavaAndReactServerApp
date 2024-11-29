@@ -87,16 +87,13 @@
 
     <profiles>
         <profile>
-            <id>dev_props</id>
-            <properties>
-                <cors.allowed>http://localhost:5173</cors.allowed>
-            </properties>
-        </profile>
-        <profile>
             <id>prod_props</id>
             <properties>
-                <cors.allowed>https://implife.pp.ua</cors.allowed>
+                <appPropProfile>prod</appPropProfile>
             </properties>
+            <build>
+                <finalName>ROOT</finalName>
+            </build>
         </profile>
         <profile>
             <id>build_for_tomcat</id>

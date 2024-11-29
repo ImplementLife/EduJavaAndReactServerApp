@@ -1,14 +1,15 @@
 package il.test.TestWithReact.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
+@Slf4j
 @Configuration
 public class CORSConfig {
     @Value("#{'${cors.allow}'.split(',')}")
@@ -19,11 +20,12 @@ public class CORSConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                CorsRegistration corsRegistration = registry.addMapping("/api/**");
                 for (String corsAllow : corsAllowed) {
-                    corsRegistration
-                        .allowedOrigins(corsAllow)
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+                    log.info("corsAllowed: {}", corsAllow);
+                    registry
+                        .addMapping("/api/**")
+                        .allowedOrigins(corsAllow.trim())
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
                 }
