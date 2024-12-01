@@ -10,8 +10,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 
 public interface ApiCommon {
+
+    @Operation(summary = "Check server is available.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Server available")
+    })
+    ResponseEntity<Void> isAvailable();
+
+
     @Operation(summary = "Register new user.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "New user created.")

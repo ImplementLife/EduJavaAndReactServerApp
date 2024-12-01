@@ -29,13 +29,13 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<SecDto> refresh(SecDto secDto) {
+    public ResponseEntity<SecDto> refresh(@RequestBody SecDto secDto) {
         SecDto refreshedSecDto = jwtAuthService.refresh(secDto);
         return ResponseEntity.ok(refreshedSecDto);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(SecDto secDto) {
+    public ResponseEntity<Void> logout(@RequestBody SecDto secDto) {
         jwtAuthService.logout(secDto);
         return ResponseEntity.ok().build();
     }

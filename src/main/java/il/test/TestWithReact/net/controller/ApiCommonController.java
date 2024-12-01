@@ -33,6 +33,11 @@ public class ApiCommonController implements ApiCommon {
         return (Long) authentication.getPrincipal();
     }
 
+    @GetMapping("/isAvailable")
+    public ResponseEntity<Void> isAvailable() {
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/self")
     public ResponseEntity<User> selfInfo() {
         Optional<User> byId = userRepo.findById(getAuthUserID());
