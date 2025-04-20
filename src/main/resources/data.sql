@@ -4,6 +4,8 @@ INSERT INTO users (email, first_name, last_name, birth_date, address, phone_numb
 ('1', 'ROOT_USER', 'ROOT_USER', '2000-06-16 00:00:00', null, '0000000000', '1', 'AM'),
 ('root2@root.com', 'ROOT_USER_2', 'ROOT_USER_2', '2000-06-16 00:00:00', null, '0000000001', 'root', 'A');
 
+INSERT INTO users (email, first_name, last_name, birth_date, address, phone_number, pass, roles) VALUES
+('email0@example.com', 'John', 'Doe', '1990-01-01 00:00:00', '123 Main St', '1234567890', '123', 'U');
 INSERT INTO users (email, first_name, last_name, birth_date, address, phone_number) VALUES
 ('email1@example.com', 'John', 'Doe', '1990-01-01 00:00:00', '123 Main St', '1234567890'),
 ('email2@example.com', 'Jane', 'Smith', '1995-05-10 00:00:00', '456 Elm St', '0987654321'),
