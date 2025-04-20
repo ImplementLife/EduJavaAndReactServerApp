@@ -1,6 +1,8 @@
 package il.test.TestWithReact.service.impl.aws;
 
 import il.test.TestWithReact.service.FileStorageService;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -44,5 +46,13 @@ public class S3FSS implements FileStorageService {
             GetObjectRequest.builder().bucket(bucketName).key(name).build(),
             ResponseTransformer.toOutputStream(outputStream)
         );
+    }
+
+    public Resource getFileAsResource(String name) {
+        InputStream inputStream = s3Client.getObject(
+            GetObjectRequest.builder().bucket(bucketName).key(name).build(),
+            ResponseTransformer.toInputStream()
+        );
+        return new InputStreamResource(inputStream);
     }
 }

@@ -3,6 +3,7 @@ package il.test.TestWithReact.service;
 import il.test.TestWithReact.data.entity.db.User;
 import il.test.TestWithReact.data.entity.dto.LoginRequest;
 import il.test.TestWithReact.data.repo.UserRepo;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,15 @@ public class UserService {
             return user;
         }
         throw new IllegalArgumentException("Invalid password");
+    }
+
+    @Data
+    public static class UpdateUserRequest {
+        
+    }
+
+    public void updateUser(UpdateUserRequest updateUserRequest) {
+
     }
 
 }

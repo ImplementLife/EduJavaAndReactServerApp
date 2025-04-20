@@ -3,7 +3,9 @@ package il.test.TestWithReact.net.controller;
 import il.test.TestWithReact.service.FileStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,16 +40,17 @@ public class ApiFileStorageController {
     }
 
     @GetMapping("/{imageId}")
-    public ResponseEntity<byte[]> getImg(@PathVariable String imageId) {
+    public ResponseEntity<Resource> getImg(@PathVariable String imageId) {
         String key = "images/" + imageId;
 
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            fss.getFile(key, outputStream);
-            byte[] photoBytes = outputStream.toByteArray();
-            return ResponseEntity.ok().body(photoBytes);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+//        try {
+            Resource resource = fss.getFileAsResource(key);
+            return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG) // Adjust based on your image type
+                .body(resource);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        }
     }
 
 }
