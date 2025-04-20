@@ -36,7 +36,7 @@ public class ApiAdminController implements ApiAdmin {
         @RequestParam(required = false) String sortBy,
         @RequestParam(defaultValue = "true") boolean ascDir
     ) {
-        log.info("Request: api/admin/users page:{} size:{} sortBy:{} ascDir:{}", page, size, sortBy, ascDir);
+        log.trace("Request: /api/admin/users page:{} size:{} sortBy:{} ascDir:{}", page, size, sortBy, ascDir);
         Pageable pageable;
         if (sortBy != null && !sortBy.isEmpty()) {
             Sort.Direction sortDirection = ascDir ? Sort.Direction.ASC : Sort.Direction.DESC;
@@ -53,7 +53,7 @@ public class ApiAdminController implements ApiAdmin {
     @GetMapping("/user")
     @JsonView({ViewLevel.Admin.class})
     public ResponseEntity<User> getUser(@RequestParam Long id) {
-        log.info("Request: api/admin/user");
+        log.trace("Request: /api/admin/user");
         Optional<User> byId = userRepo.findById(id);
         if (byId.isPresent()) {
             return ResponseEntity.ok(byId.get());

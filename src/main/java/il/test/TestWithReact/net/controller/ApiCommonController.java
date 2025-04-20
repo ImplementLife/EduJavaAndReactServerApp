@@ -66,6 +66,9 @@ public class ApiCommonController implements ApiCommon {
 
     @PutMapping("/user")
     public ResponseEntity<Void> updateUser(@Validated @RequestBody User user) {
+        if (!getAuthUserID().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         userRepo.save(user);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

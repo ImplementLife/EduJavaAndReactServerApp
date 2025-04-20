@@ -20,7 +20,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private JwtAuthService jwtAuthService;
     @Autowired
-    private AuthEntryPoint entryPoint;
+    private AuthEntryPoint authEntryPoint;
 
     @Override
     protected void doFilterInternal(
@@ -28,14 +28,14 @@ public class JwtFilter extends OncePerRequestFilter {
         HttpServletResponse response,
         FilterChain chain
     ) throws ServletException, IOException {
-        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String authCred = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (header != null) {
+        if (authCred != null) {
             try {
-                SecurityContextHolder.getContext().setAuthentication(jwtAuthService.validateAccessToken(header));
+                SecurityContextHolder.getContext().setAuthentication(jwtAuthService.validateAccessToken(authCred));
             } catch (JWTVerificationException e) {
                 SecurityContextHolder.clearContext();
-                entryPoint.commence(request, response, e);
+                authEntryPoint.commence(request, response, e);
                 return;
             } catch (Exception e) {
                 SecurityContextHolder.clearContext();
